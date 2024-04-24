@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-extend="HrAttendanceMyMainMenu">
+        <t t-jquery="t[t-set='bodyContent'] div.flex-grow-1" t-operation="after">
+            <div class="row mt8 mb8">
+                <div t-if="widget.employee.attendance_state=='checked_out'" class="col-8" style="margin-left: auto; margin-right: auto; margin-bottom: 10px;">
+                    <select class="form-select" name="oe_project" id="oe_project" t-on-change="OnChangeProject" data-live-search="true" required="required">
+                        <option></option>
+                        <t t-foreach="widget.projects" t-as="project">
+                            <option t-att-value="project.id" t-att-selected="None" >
+                                <t t-esc="project.name" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
+                <div t-if="widget.employee.attendance_state=='checked_in'">
+                    <h3><span t-esc="widget.projectName" /></h3>
+                </div>
+                <div t-if="widget.employee.attendance_state=='checked_out'" class="col-8" style="margin-left: auto; margin-right: auto; margin-bottom: 10px;">
+
+                    <select class="form-select" name="oe_task" id="oe_task" >
+                        <option></option>
+<!--                        <t t-foreach="widget.tasks" t-as="task">-->
+<!--                            <option t-att-value="task.id" t-att-selected="None" >-->
+<!--                                <t t-esc="task.name" />-->
+<!--                            </option>-->
+<!--                        </t>-->
+                    </select>
+                </div>
+                <div t-if="widget.employee.attendance_state=='checked_in'">
+                    <h3><span t-esc="widget.taskName" /></h3>
+                </div>
+                <div t-if="widget.employee.attendance_state=='checked_out'" class="col-8" style="margin-left: auto; margin-right: auto;">
+                    <input type="text" name="oe_description" id="oe_description" class="o_input mt8" placeholder="Enter your description here." required="required"/>
+                </div>
+                <div t-if="widget.employee.attendance_state=='checked_in'">
+                    <h3><span t-esc="widget.description" /></h3>
+                </div>
+
+            </div>
+        </t>
+    </t>
+
+</templates>
