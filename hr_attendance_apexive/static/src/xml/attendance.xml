@@ -21,11 +21,6 @@
 
                     <select class="form-select" name="oe_task" id="oe_task" >
                         <option></option>
-<!--                        <t t-foreach="widget.tasks" t-as="task">-->
-<!--                            <option t-att-value="task.id" t-att-selected="None" >-->
-<!--                                <t t-esc="task.name" />-->
-<!--                            </option>-->
-<!--                        </t>-->
                     </select>
                 </div>
                 <div t-if="widget.employee.attendance_state=='checked_in'">
