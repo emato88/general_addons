@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <!-- This XML code modifies the view to display different elements based on the employee's
+     attendance state and allows them to select projects, tasks, and enter descriptions accordingly.   -->
+
     <t t-extend="HrAttendanceMyMainMenu">
         <t t-jquery="t[t-set='bodyContent'] div.flex-grow-1" t-operation="after">
             <div class="row mt8 mb8">

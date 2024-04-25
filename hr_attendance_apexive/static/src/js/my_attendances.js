@@ -6,14 +6,22 @@ odoo.define('hr_attendance_apexive.my_attendances', function (require) {
 
     const session = require('web.session');
     MyAttendances.include({
+
+        //this Owl event allows the MyAttendances component to handle
+        // the change event of the oe_project element by invoking
+        // the OnChangeProject method when the element's value changes.
+
         events: _.extend({}, MyAttendances.prototype.events, {
             'change #oe_project': 'OnChangeProject',
         }),
 
+
+        // willStart function fetches data about the current user's attendance and available projects from the server,
+        // processes the retrieved data, and ensures that the component starts rendering only after all required
+        // data is available.
+
         willStart: function () {
-            console.log('Test01')
             var self = this;
-            console.log(self)
             var def = this._rpc({
                 model: "hr.employee",
                 method: "search_read",
@@ -34,6 +42,7 @@ odoo.define('hr_attendance_apexive.my_attendances', function (require) {
                     }
                 }
             });
+
             var projectInfo = this._rpc({
                 model: "project.project",
                 method: "search_read",
@@ -42,12 +51,17 @@ odoo.define('hr_attendance_apexive.my_attendances', function (require) {
                 self.projects = result;
             });
 
+            // This line returns a Promise that resolves when all asynchronous operations (RPC calls) are complete.
+
             return Promise.all([def, projectInfo, this._super.apply(this, arguments)
             ]);
         },
 
+
+        //OnChangeProject function updates the tasks dropdown based on the selected project,
+        // ensuring that only relevant tasks are displayed for the selected project.
+
         OnChangeProject:  function(){
-            console.log('Test1')
             var self = this;
             const project_id = this.$el.find('select#oe_project').find(":selected").val();
             var select_tareas = self.$el.find('select#oe_task')
@@ -72,6 +86,10 @@ odoo.define('hr_attendance_apexive.my_attendances', function (require) {
             });
 
         },
+
+        //this update_attendance function updates the attendance record of the current employee with the selected
+        // project, task, and description and handles the response from the server accordingly,
+        // either by executing an action or displaying a warning notification.
 
         update_attendance: function () {
             const project_id = this.$el.find('select#oe_project').find(":selected").val();
