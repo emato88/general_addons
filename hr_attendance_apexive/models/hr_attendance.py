@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api
-from odoo.exceptions import ValidationError
 
 
 class HrAttendance(models.Model):
@@ -14,23 +13,10 @@ class HrAttendance(models.Model):
     domain for filtering related tasks.
     """
 
-    project_id = fields.Many2one('project.project', string='Project', required=True)
-    task_id = fields.Many2one('project.task', string='Task', required=True)
+    project_id = fields.Many2one('project.project', string='Project')
+    task_id = fields.Many2one('project.task', string='Task')
     task_domain_ids = fields.Many2many('project.task', string='Tasks', compute='_get_tasks')
-    description = fields.Char(string="Description", required=True)
-
-    @api.constrains('project_id', 'task_id', 'description')
-    def _check_fields(self):
-
-        """ Verifies if project, task and description are completed. """
-
-        for attendance in self:
-            if not attendance.project_id:
-                raise ValidationError('Fields project must be completed.')
-            if not attendance.task_id:
-                raise ValidationError('Fields task must be completed.')
-            if not attendance.description:
-                raise ValidationError('Fields description must be completed.')
+    description = fields.Char(string="Description")
 
     @api.depends('project_id')
     def _get_tasks(self):

@@ -12,17 +12,18 @@ class HrEmployee(models.Model):
     information about the employee's current login session, such as the associated project, task, and description.    
     """
 
-    login_project_id = fields.Many2one("project.project", string="Project", readonly=True, compute="_get_login_project")
-    login_task_id = fields.Many2one("project.task", string="Task", readonly=True, compute="_get_login_task")
-    login_description = fields.Char(string="Description", readonly=True, compute="_get_login_description")
+    login_project_id = fields.Many2one("project.project", string="Project", readonly=True, compute="_get_login_info")
+    login_task_id = fields.Many2one("project.task", string="Task", readonly=True, compute="_get_login_info")
+    login_description = fields.Char(string="Description", readonly=True, compute="_get_login_info")
 
-    def _get_login_project(self):
+    def _get_login_info(self):
 
         """This method is used to get the project associated with the current employee's ongoing attendance.
 
             It iterates through each employee record in the current recordset.
             For each employee, it searches for the ongoing attendance record where the check-out time is not recorded.
-            If found, it assigns the project ID of the ongoing attendance to the employee's login_project_id field.
+            If found, it assigns the project ID of the ongoing attendance to the employee's login_project_id,
+            login_task_id and login_description fields.
 
             Args:
             - self: A recordset containing employee records.
@@ -33,49 +34,10 @@ class HrEmployee(models.Model):
 
         for employee in self:
             attendance = self.env["hr.attendance"].search(
-                [("employee_id", "=", self.id), ("check_out", "=", False)], limit=1
+                [("employee_id", "=", employee.id), ("check_out", "=", False)], limit=1
             )
             employee.login_project_id = attendance.project_id.id
-
-    def _get_login_task(self):
-
-        """This method is used to get the project associated with the current employee's ongoing attendance.
-
-            It iterates through each employee record in the current recordset.
-            For each employee, it searches for the ongoing attendance record where the check-out time is not recorded.
-            If found, it assigns the project ID of the ongoing attendance to the employee's login_task_id field.
-
-            Args:
-            - self: A recordset containing employee records.
-
-            Returns:
-            - None
-        """
-
-        for employee in self:
-            attendance = self.env["hr.attendance"].search(
-                [("employee_id", "=", self.id), ("check_out", "=", False)], limit=1
-            )
             employee.login_task_id = attendance.task_id.id
-
-    def _get_login_description(self):
-
-        """This method is used to get the project associated with the current employee's ongoing attendance.
-            It iterates through each employee record in the current recordset.
-            For each employee, it searches for the ongoing attendance record where the check-out time is not recorded.
-            If found, it assigns the project ID of the ongoing attendance to the employee's login_description field.
-
-            Args:
-            - self: A recordset containing employee records.
-
-            Returns:
-            - None
-        """
-
-        for employee in self:
-            attendance = self.env["hr.attendance"].search(
-                [("employee_id", "=", self.id), ("check_out", "=", False)], limit=1
-            )
             employee.login_description = attendance.description
 
     def _attendance_action_change(self):
